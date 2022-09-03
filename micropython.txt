@@ -1,0 +1,42 @@
+import network, urequests
+from machine import Pin, ADC
+from time import sleep
+HTTP_HEADERS = {'Content-Type': 'text/plain'} 
+THINGSPEAK_WRITE_API_KEY = '3PPYQEYKEMPHRW5B' 
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+print('connecting to network...')
+wlan.connect('Danny the epic', '6666666668')
+while not wlan.isconnected():
+    pass
+    
+print('network config:', wlan.ifconfig())
+
+
+battery = ADC(Pin(34))
+battery.atten(ADC.ATTN_11DB)       #Full range of 3.3v
+total=0
+battery_value=0
+count=0#方便測試
+
+while True:
+  sleep(1)
+  count=count+1
+  
+  for x in range(20):
+       total=total+battery.read()#取20次
+    
+  total_send = total/20*1.8/100#調至適合範圍
+  request = urequests.post( 'destination' , data = total_send, headers = HTTP_HEADERS )  
+  request.close() 
+  print(total_send)
+  total=0
+
+
+
+    
+  
+      
+ 
+  
+
