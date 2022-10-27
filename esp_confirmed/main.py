@@ -18,7 +18,7 @@ print('device unique ID: ' + unique_id)
 
 #wifi connecting
 print('connecting to network...')
-wlan.connect('Danny the epic', '6666666668')
+wlan.connect('Hello Stranger', '00000000')
 while not wlan.isconnected():
     pass
     
@@ -42,14 +42,17 @@ while True:
     count=battery_superviser.collect_info_count()
     print(count)
     
-    #post_data_json = ujson.dumps({'UUID': unique_id,'battery_level':current_battery_level})  # obj -> JSON string
-    current_battery_level_thinkspeak = {'field1':total,'field2':current_battery_level,'field3':current_battery,'field4':count} 
-    request = urequests.post( 'http://api.thingspeak.com/update?api_key=' + THINGSPEAK_WRITE_API_KEY, json = current_battery_level_thinkspeak, headers = HTTP_HEADERS  )  
-    request.close()
-    #res = urequests.post('http://192.168.28.122:5000/newDevice', data=post_data_json)  # remember to confirm IP address
-
-
-  
+    if(count==1):
+        post_data_json = ujson.dumps({'UUID': unique_id})  # obj -> JSON string
+        #current_battery_level_thinkspeak = {'field1':total,'field2':current_battery_level,'field3':current_battery,'field4':count} 
+        #request = urequests.post( 'http://api.thingspeak.com/update?api_key=' + THINGSPEAK_WRITE_API_KEY, json = current_battery_level_thinkspeak, headers = HTTP_HEADERS  )  
+        res = urequests.post('http://192.168.0.103:5000/newDevice', data=post_data_json)  # remember to confirm IP address
+        res.close()
+        
+    current_battery_level_json= ujson.dumps({'current_battery_level': current_battery_level})
+    battery_send = urequests.post('http://192.168.0.103:5000/bettery_level', data=current_battery_level_json)  # remember to confirm IP address
+        
+    
   
   
 
